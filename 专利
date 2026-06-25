@@ -1,0 +1,100 @@
+<!-- 标题 -->
+<h1>
+  ${(() => {
+    const date = topItem.getField("issueDate").split('T')[0];
+    const title = topItem.getField("title");
+    const titleTranslation = topItem.getField("titleTranslation");
+    if (date && titleTranslation) {
+      return `(${date}) ${title} (${titleTranslation})`;
+    } else if (date) {
+      return `(${date}) ${title}`;
+    } else {
+      return `${title}`;
+    }
+  })()}
+</h1>
+
+<!-- Meta Data -->
+<table>
+  
+  <!-- 专利权人 -->
+  <tr>
+  	<td style="color:#193c47; background-color:#D1E1A1; padding:8px;">
+	  <b>专利权人: </b>${topItem.getField('assignee') || ''}
+	</td>
+  </tr>
+
+    <!-- 专利号 -->
+  <tr>
+    <td style="color:#193c47; background-color:#f3faf4; padding:8px;">
+      <b>专利号：</b>${topItem.getField('patentNumber') || ''}
+    </td>
+  </tr>
+
+<!-- 优先权日 -->
+<tr>
+  <td style="color:#193c47; background-color:#dbeedd; padding:8px;">
+    <b>优先权日：</b>${topItem.getField('priorityDate') || ''}
+  </td>
+</tr>
+
+  <!-- 本地链接 -->
+  <tr>
+    <td style="color:#193c47; background-color:#f3faf4; padding:8px;">
+      ${(() => {
+        const attachments = Zotero.Items.get(topItem.getAttachments());
+        const pdf = attachments.filter((i) => i.isPDFAttachment());
+        if (pdf && pdf.length > 0) {
+          return `<b>本地链接: </b><a href="zotero://open-pdf/0_${pdf[0].key}">${pdf[0].getFilename()}</a>`;
+        } else if (attachments && attachments.length > 0) {
+          return `<b>本地链接: </b><a href="zotero://open-pdf/0_${attachments[0].key}">${attachments[0].getFilename()}</a>`;
+        } else {
+          return `<b>本地链接: </b>`;
+        }
+      })()}
+    </td>
+  </tr>
+
+  <!-- DOI or URL -->
+  <tr>
+    <td style="color:#193c47; background-color:#dbeedd; padding:8px;">
+      ${(() => {
+        const doi = topItem.getField("DOI");
+        if (doi) {
+          return `<b>DOI: </b><a href="https://doi.org/${topItem.getField('DOI')}">${topItem.getField('DOI')}</a>`;
+        } else {
+          return `<b>URL: </b><a href="${topItem.getField('url')}">${topItem.getField('url')}</a>`;
+        }
+      })()}
+    </td>
+  </tr>
+
+
+  <!-- 标签 -->
+  <tr>
+  <td style="color:#193c47; background-color:#f3faf4; padding:8px;">
+    <!-- 仅过滤并显示#开头的标签 -->
+    <b>标签: </b>#文献笔记 , ${topItem.getTags().map(tagObj => tagObj.tag.startsWith('#') ? tagObj.tag + ' ,':'').join(' ') || ''}
+  </td>
+  </tr>
+
+  <!-- 笔记日期 -->
+  <tr>
+    <td style="color:#193c47; background-color:#dbeedd; padding:8px;">
+      <b>笔记日期: </b>${new Date().toLocaleString()}
+    </td>
+  </tr>
+
+</table>
+
+<!-- 正文 -->
+<span>
+  <h2 style="color:#004d99; background-color:#87cefa;">🤔 个人总结</h2>
+</span>
+<h3>🙋‍♀️ 重点记录</h3>
+<h3>📌 待解决</h3>
+<h3>💭 思考启发</h3>
+
+<span>
+  <h2 style="color:#e0ffff; background-color:#66cdaa;">📜 全文总结</h2>
+</span>
